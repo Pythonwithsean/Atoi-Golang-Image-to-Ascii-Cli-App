@@ -2,8 +2,8 @@ package utils
 
 import (
 	"fmt"
+	"image"
 	_ "image/png"
-	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -38,14 +38,12 @@ func FetchImage(addr string) (string, error) {
 		fmt.Println("Your File is a PNG file")
 	}
 
-	// reader := base64.NewDecoder() 
-
-	data,err := io.ReadAll(reader)
-	if err != nil {
+	imgData,_,err := image.Decode(reader)
+	if err != nil { 
 		log.Fatal(err)
 	}
-	fmt.Println(data)
-
+	fmt.Println(imgData)
+	
 	
 	return "", nil
 
