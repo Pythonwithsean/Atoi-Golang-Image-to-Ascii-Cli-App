@@ -22,10 +22,10 @@ func FetchImage(addr string) (string, error) {
 		log.Fatal("Error Opening File", err)
 	}
 
-	switch {
-	case filepath.Ext(string(strings.TrimSpace(reader.Name()))) == "jpg":
+	switch ext := filepath.Ext(string(reader.Name()));  ext {
+	case ".jpeg":
 		fmt.Println("Your File is a JPEG file")
-	case filepath.Ext(string(strings.TrimSpace(reader.Name()))) == "png":
+	case ".png":
 		fmt.Println("Your File is a PNG file")
 	}
 
