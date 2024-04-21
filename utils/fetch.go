@@ -35,6 +35,14 @@ func FetchImage(addr string) (string, error) {
 	// case ".png":
 	// 	fmt.Println("Your File is a PNG file")
 	// }
+
+		/* To Calculate the Brightmess from Rgb values it can be done bt converting the rgb values of each pixel into a Greyscale value 
+		I have Chosen to use the Luminance formula grayscale = 0.2126 * Red + 0.7152 * Green + 0.00722 * Blue this formula will take into account
+		the humans eyes sensitivity to different colors and provies a better representation of brighness 
+		*/
+
+		//Ascii symbols
+		
 	/* Decoded image  after opening reader  */
 	imgData,_,err := image.Decode(file)
 	if err != nil { 
