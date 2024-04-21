@@ -9,8 +9,8 @@ import (
 )
 
 func main() { 
-	fmt.Printf(utils.Yellow + utils.IntialAscii)
-	fmt.Println(utils.Cyan + "Welcome to Atoi")
+	fmt.Printf(utils.Red + utils.IntialAscii)
+	fmt.Println(utils.Yellow + "Welcome to Atoi")
 	fmt.Println("A Image to Ascii Cli Application")
 	fmt.Print("Search for an Image? ")
 	buff := bufio.NewReader(os.Stdin)

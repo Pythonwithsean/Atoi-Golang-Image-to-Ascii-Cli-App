@@ -29,9 +29,9 @@ func FetchImage(addr string) (string, error) {
 		fmt.Println("Your File is a PNG file")
 	}
 
-	fmt.Println(reader.Name())
+	// reader := base64.NewDecoder() 
 
-	fmt.Println(reader)
+	
 	return "", nil
 
 }
