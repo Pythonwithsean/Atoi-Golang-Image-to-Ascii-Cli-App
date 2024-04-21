@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Pythonwithsean/Atoi-Golang-Image-to-Ascii-Cli-App/ascii"
 	"github.com/Pythonwithsean/Atoi-Golang-Image-to-Ascii-Cli-App/utils"
 )
 
@@ -18,6 +19,6 @@ func main() {
 	if err != nil { 
 		panic(err)
 	}
-	utils.FetchImage(input)
+	ascii.ImageToAscii(input)
 
 }
