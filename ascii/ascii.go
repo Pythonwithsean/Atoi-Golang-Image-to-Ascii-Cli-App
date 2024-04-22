@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	"github.com/nfnt/resize"
 )
 
 
@@ -21,6 +23,7 @@ func ImageToAscii(addr string) (string, error) {
 	if err != nil {
 		log.Fatal("Error Opening File", err)
 	}
+
 
 	// Close Reader When Function gets popped off Call stack
 	defer file.Close()
@@ -39,31 +42,42 @@ func ImageToAscii(addr string) (string, error) {
 		//Luminance (perceived option 1): (0.299*R + 0.587*G + 0.114*B)
 
 		//Ascii symbols
-	brightAscii := " "
-	darkAscii := "#"
+	brightAscii := "@"
+	darkAscii := " "
 		
 	/* Decoded image  after opening reader  */
 	imgData,_,err := image.Decode(file)
 	if err != nil { 
 		log.Fatal(err)
 	}
+	// Aspect ratio of Old Image 
+	a := float64(imgData.Bounds().Dx()) / float64(imgData.Bounds().Dy())
 
-	// Iterate Over bounds 
-	bounds := imgData.Bounds()
-	for x := bounds.Min.X; x < bounds.Max.X; x++{ 
-		for y := bounds.Min.Y;  y< bounds.Max.Y; y++{ 
+	//new Widht and Height Using Aspect Ratio 
+	newwidth := 100 
+	newHeight := int(float64(newwidth) / a)
+
+	// Iterate Over each pixel in image 
+	resizedImg := resize.Resize(uint(newwidth), uint(newHeight) ,imgData,resize.Lanczos2)
+	bounds := resizedImg.Bounds()
+	
+
+	for y := bounds.Min.Y;  y < bounds.Max.Y; y++{ 
+	for x := bounds.Min.X ; x < bounds.Max.X; x++{ 
 			r,g,b,_ := imgData.At(x,y).RGBA()
 			brigthness := (0.299* float64(r) + 0.587* float64(g) + 0.114* float64(b))
 			bright :=  brigthness >=  150 
-			dark  := brigthness <= 100  
+			dark  := brigthness <= 50  
 			if bright {
-				fmt.Print(brightAscii + " ")
-
+				fmt.Print(brightAscii + " ")	
 			}else if dark {
 				fmt.Print(darkAscii + " ")
 			}
 		}
+		fmt.Println()
 	} 
+
+
 	
 	
 	return "", nil
