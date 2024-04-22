@@ -12,7 +12,7 @@ import (
 
 
 
-func ImageToAscii(addr string) (string, error) {
+func ImageToAscii(addr string)  {
 
 	// asciiChars := map[string]string{
 		
@@ -28,13 +28,6 @@ func ImageToAscii(addr string) (string, error) {
 	// Close Reader When Function gets popped off Call stack
 	defer file.Close()
 
-	// switch ext := filepath.Ext(string(reader.Name()));  ext {
-	// case ".jpeg":
-	// 	fmt.Println("Your File is a JPEG file")
-	// case ".png":
-	// 	fmt.Println("Your File is a PNG file")
-	// }
-
 		/* To Calculate the Brightmess from Rgb values it can be done bt converting the rgb values of each pixel into a Greyscale value 
 		I have Chosen to use the Luminance formula grayscale = 0.2126 * Red + 0.7152 * Green + 0.00722 * Blue this formula will take into account
 		the humans eyes sensitivity to different colors and provies a better representation of brighness 
@@ -45,23 +38,16 @@ func ImageToAscii(addr string) (string, error) {
 	brightAscii := "@"
 	darkAscii := " "
 		
-	/* Decoded image  after opening reader  */
+	/* Decoded image into rgb values for each pixel  */
 	imgData,_,err := image.Decode(file)
 	if err != nil { 
 		log.Fatal(err)
 	}
-	// Aspect ratio of Old Image 
-	// a := float64(imgData.Bounds().Dx()) / float64(imgData.Bounds().Dy())
 
-	//new Widht and Height Using Aspect Ratio 
-	newwidth := 0
-	// newHeight := int(float64(newwidth) / a)
 
-	// Iterate Over each pixel in image 
-	resizedImg := resize.Resize(uint(newwidth), 100 ,imgData,resize.Lanczos2)
+	// Resizen Image to smaller res for Terminal
+	resizedImg := resize.Resize(0 , 50 ,imgData,resize.Lanczos2)
 	bounds := resizedImg.Bounds()
-	
-
 	for y := bounds.Min.Y;  y < bounds.Max.Y; y++{ 
 	for x := bounds.Min.X ; x < bounds.Max.X; x++{ 
 			r,g,b,_ := resizedImg.At(x,y).RGBA()
@@ -69,17 +55,11 @@ func ImageToAscii(addr string) (string, error) {
 			bright :=  brigthness >=  150 
 			dark  := brigthness <= 50  
 			if bright {
-				fmt.Print(brightAscii + " ")	
+				fmt.Print(brightAscii  + " ")	
 			}else if dark {
 				fmt.Print(darkAscii + " ")
 			}
 		}
 		fmt.Println()
 	} 
-
-
-	
-	
-	return "", nil
-
 }
