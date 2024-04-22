@@ -51,20 +51,20 @@ func ImageToAscii(addr string) (string, error) {
 		log.Fatal(err)
 	}
 	// Aspect ratio of Old Image 
-	a := float64(imgData.Bounds().Dx()) / float64(imgData.Bounds().Dy())
+	// a := float64(imgData.Bounds().Dx()) / float64(imgData.Bounds().Dy())
 
 	//new Widht and Height Using Aspect Ratio 
-	newwidth := 100 
-	newHeight := int(float64(newwidth) / a)
+	newwidth := 0
+	// newHeight := int(float64(newwidth) / a)
 
 	// Iterate Over each pixel in image 
-	resizedImg := resize.Resize(uint(newwidth), uint(newHeight) ,imgData,resize.Lanczos2)
+	resizedImg := resize.Resize(uint(newwidth), 100 ,imgData,resize.Lanczos2)
 	bounds := resizedImg.Bounds()
 	
 
 	for y := bounds.Min.Y;  y < bounds.Max.Y; y++{ 
 	for x := bounds.Min.X ; x < bounds.Max.X; x++{ 
-			r,g,b,_ := imgData.At(x,y).RGBA()
+			r,g,b,_ := resizedImg.At(x,y).RGBA()
 			brigthness := (0.299* float64(r) + 0.587* float64(g) + 0.114* float64(b))
 			bright :=  brigthness >=  150 
 			dark  := brigthness <= 50  
