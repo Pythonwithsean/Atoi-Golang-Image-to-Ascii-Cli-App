@@ -3,6 +3,7 @@ package ascii
 import (
 	"fmt"
 	"image"
+	"image/color"
 	"log"
 	"os"
 	"strings"
@@ -10,7 +11,20 @@ import (
 	"github.com/nfnt/resize"
 )
 
+func convertToGreyScale( img image.Image) image.Image{
+	//Create New Grey Image Frame with the bounds of the Old Image
+	greyImg := image.NewGray(img.Bounds())
 
+	for y := greyImg.Bounds().Min.Y; y < greyImg.Bounds().Max.Y; y++{
+		for x:= greyImg.Bounds().Min.X; x < greyImg.Bounds().Max.X; x++{
+				pixelAtLocation := img.At(x,y)
+				grayColor := color.GrayModel.Convert(pixelAtLocation)
+				greyImg.Set(x,y,grayColor)
+
+		}
+	}
+	return greyImg
+}
 
 func ImageToAscii(addr string)  {
 
@@ -35,29 +49,41 @@ func ImageToAscii(addr string)  {
 		//Luminance (perceived option 1): (0.299*R + 0.587*G + 0.114*B)
 
 		//Ascii symbols
-	brightAscii := "@"
-	darkAscii := " "
+	brightAscii := []string{"@", "+", "="}
+
+	darkAscii := []string{" ", ".", "-" }
 		
-	/* Decoded image into rgb values for each pixel  */
+	/* Decoded image so that i can work with the image data like pixels for each pixel   */
 	imgData,_,err := image.Decode(file)
 	if err != nil { 
 		log.Fatal(err)
 	}
 
+	greyScaledImage := convertToGreyScale(imgData)
+
 
 	// Resizen Image to smaller res for Terminal
-	resizedImg := resize.Resize(0 , 50 ,imgData,resize.Lanczos2)
+	resizedImg := resize.Resize(0 , 50 ,greyScaledImage,resize.Lanczos2)
 	bounds := resizedImg.Bounds()
 	for y := bounds.Min.Y;  y < bounds.Max.Y; y++{ 
 	for x := bounds.Min.X ; x < bounds.Max.X; x++{ 
+		//This Returns the Color Codes for 16bit Color Channels from 0 - 2^16
 			r,g,b,_ := resizedImg.At(x,y).RGBA()
+			// color := image.RGBA()
 			brigthness := (0.299* float64(r) + 0.587* float64(g) + 0.114* float64(b))
-			bright :=  brigthness >=  150 
-			dark  := brigthness <= 50  
+			bright :=  brigthness >=  150 && brigthness < 200 
+		brightest := brigthness >= 200 && brigthness < 256
+			dark  := brigthness <= 50 
+			darked := brigthness >= 50 && brigthness < 150 
+			fmt.Println("Color for RGB and Brightness",r,g,b,brigthness)
 			if bright {
-				fmt.Print(brightAscii  + " ")	
+				fmt.Print(brightAscii[0]  + " ")	
+			}else if brightest{
+				fmt.Print(brightAscii[2] + " ")
+			}else if darked{
+				fmt.Print(darkAscii[1] + " ")
 			}else if dark {
-				fmt.Print(darkAscii + " ")
+				fmt.Print(darkAscii[0] + " ")
 			}
 		}
 		fmt.Println()
