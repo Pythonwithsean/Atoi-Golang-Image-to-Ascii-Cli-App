@@ -3,7 +3,6 @@ package ascii
 import (
 	"fmt"
 	"image"
-	"image/color"
 	"log"
 	"os"
 	"strings"
@@ -11,20 +10,20 @@ import (
 	"github.com/nfnt/resize"
 )
 
-func convertToGreyScale( img image.Image) image.Image{
-	//Create New Grey Image Frame with the bounds of the Old Image
-	greyImg := image.NewGray(img.Bounds())
+// func convertToGreyScale( img image.Image) image.Image{
+// 	//Create New Grey Image Frame with the bounds of the Old Image
+// 	greyImg := image.NewGray(img.Bounds())
 
-	for y := greyImg.Bounds().Min.Y; y < greyImg.Bounds().Max.Y; y++{
-		for x:= greyImg.Bounds().Min.X; x < greyImg.Bounds().Max.X; x++{
-				pixelAtLocation := img.At(x,y)
-				grayColor := color.GrayModel.Convert(pixelAtLocation)
-				greyImg.Set(x,y,grayColor)
+// 	for y := greyImg.Bounds().Min.Y; y < greyImg.Bounds().Max.Y; y++{
+// 		for x:= greyImg.Bounds().Min.X; x < greyImg.Bounds().Max.X; x++{
+// 				pixelAtLocation := img.At(x,y)
+// 				grayColor := color.GrayModel.Convert(pixelAtLocation)
+// 				greyImg.Set(x,y,grayColor)
 
-		}
-	}
-	return greyImg
-}
+// 		}
+// 	}
+// 	return greyImg
+// }
 
 func ImageToAscii(addr string)  {
 
@@ -59,23 +58,23 @@ func ImageToAscii(addr string)  {
 		log.Fatal(err)
 	}
 
-	greyScaledImage := convertToGreyScale(imgData)
+	// greyScaledImage := convertToGreyScale(imgData)
 
 
 	// Resizen Image to smaller res for Terminal
-	resizedImg := resize.Resize(0 , 50 ,greyScaledImage,resize.Lanczos2)
+	resizedImg := resize.Resize(0 , 100 ,imgData,resize.Lanczos2)
 	bounds := resizedImg.Bounds()
 	for y := bounds.Min.Y;  y < bounds.Max.Y; y++{ 
-	for x := bounds.Min.X ; x < bounds.Max.X; x++{ 
+		for x := bounds.Min.X ; x < bounds.Max.X; x++{ 
 		//This Returns the Color Codes for 16bit Color Channels from 0 - 2^16
 			r,g,b,_ := resizedImg.At(x,y).RGBA()
 			// color := image.RGBA()
 			brigthness := (0.299* float64(r) + 0.587* float64(g) + 0.114* float64(b))
-			bright :=  brigthness >=  150 && brigthness < 200 
-		brightest := brigthness >= 200 && brigthness < 256
-			dark  := brigthness <= 50 
-			darked := brigthness >= 50 && brigthness < 150 
-			fmt.Println("Color for RGB and Brightness",r,g,b,brigthness)
+			bright :=  brigthness >=  20000
+			brightest := brigthness >= 30000 
+			dark  := brigthness <= 1500
+			darked := brigthness <= 300
+			// fmt.Println("Color for RGB ad Brightness",r,g,b,brigthness)
 			if bright {
 				fmt.Print(brightAscii[0]  + " ")	
 			}else if brightest{
