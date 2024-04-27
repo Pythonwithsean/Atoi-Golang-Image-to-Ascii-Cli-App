@@ -13,7 +13,6 @@ import (
 // func convertToGreyScale( img image.Image) image.Image{
 // 	//Create New Grey Image Frame with the bounds of the Old Image
 // 	greyImg := image.NewGray(img.Bounds())
-
 // 	for y := greyImg.Bounds().Min.Y; y < greyImg.Bounds().Max.Y; y++{
 // 		for x:= greyImg.Bounds().Min.X; x < greyImg.Bounds().Max.X; x++{
 // 				pixelAtLocation := img.At(x,y)
