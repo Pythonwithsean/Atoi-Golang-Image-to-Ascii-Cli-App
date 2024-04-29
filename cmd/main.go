@@ -9,16 +9,16 @@ import (
 	"github.com/Pythonwithsean/Atoi-Golang-Image-to-Ascii-Cli-App/utils"
 )
 
-func main() { 
+func main() {
 	fmt.Printf(utils.Red + utils.IntialAscii)
 	fmt.Println(utils.Yellow + "Welcome to Atoi")
 	fmt.Println("A Image to Ascii Cli Application")
 	fmt.Print("Search for an Image? ")
 	buff := bufio.NewReader(os.Stdin)
-	input,err :=buff.ReadString('\n')
-	if err != nil { 
+	input, err := buff.ReadString('\n')
+	if err != nil {
 		panic(err)
 	}
-	ascii.ImageToAscii(input)
 
+	ascii.ImageToAscii(input)
 }
