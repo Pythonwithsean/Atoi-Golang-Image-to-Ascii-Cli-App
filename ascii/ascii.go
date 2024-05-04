@@ -2,26 +2,34 @@ package ascii
 
 import (
 	"fmt"
+	"github.com/nfnt/resize"
 	"image"
+	"image/color"
 	"log"
 	"os"
 	"strings"
-
-	"github.com/nfnt/resize"
 )
 
-// func convertToGreyScale( img image.Image) image.Image{
-// 	//Create New Grey Image Frame with the bounds of the Old Image
-// 	greyImg := image.NewGray(img.Bounds())
-// 	for y := greyImg.Bounds().Min.Y; y < greyImg.Bounds().Max.Y; y++{
-// 		for x:= greyImg.Bounds().Min.X; x < greyImg.Bounds().Max.X; x++{
-// 				pixelAtLocation := img.At(x,y)
-// 				grayColor := color.GrayModel.Convert(pixelAtLocation)
-// 				greyImg.Set(x,y,grayColor)
+func convertToGreyScale(img image.Image) image.Image {
+	//Create New Grey Image Frame with the bounds of the Old Image
+	greyImg := image.NewGray(img.Bounds())
+	for y := greyImg.Bounds().Min.Y; y < greyImg.Bounds().Max.Y; y++ {
+		for x := greyImg.Bounds().Min.X; x < greyImg.Bounds().Max.X; x++ {
+			pixelAtLocation := img.At(x, y)
+			grayColor := color.GrayModel.Convert(pixelAtLocation)
+			greyImg.Set(x, y, grayColor)
 
-// 		}
-// 	}
-// 	return greyImg
+		}
+	}
+	return greyImg
+}
+
+// func calculateAverage(val *int, num int) {
+// 	*val += num
+// }
+
+// func getAllPixels() {
+
 // }
 
 func ImageToAscii(addr string) {
@@ -56,23 +64,24 @@ func ImageToAscii(addr string) {
 		log.Fatal(err)
 	}
 
-	// greyScaledImage := convertToGreyScale(imgData)
+	greyScaledImage := convertToGreyScale(imgData)
 
 	// Resizen Image to smaller res for Terminal
-	resizedImg := resize.Resize(0, 100, imgData, resize.Lanczos2)
+	resizedImg := resize.Resize(0, 100, greyScaledImage, resize.Lanczos2)
 	bounds := resizedImg.Bounds()
+	// allPixelsSum := 0
+	//
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			//This Returns the Color Codes for 16bit Color Channels from 0 - 2^16
 			r, g, b, _ := resizedImg.At(x, y).RGBA()
-			// color := image.RGBA()
 			brigthness := (0.299*float64(r) + 0.587*float64(g) + 0.114*float64(b))
-			bright := brigthness >= 15000
+			bright := brigthness >= 1200
 			brightest := brigthness >= 20000
 			dark := brigthness <= 5000
 			darked := brigthness <= 1000
 			if bright {
-				fmt.Print(brightAscii[0] + " ")
+				fmt.Print(brightAscii[0], " ")
 			} else if brightest {
 				fmt.Print(brightAscii[2] + " ")
 			} else if darked {
@@ -80,7 +89,9 @@ func ImageToAscii(addr string) {
 			} else if dark {
 				fmt.Print(darkAscii[0] + " ")
 			}
+			// calculateAverage(&allPixelsSum, int(brigthness)
 		}
 		fmt.Println()
 	}
+
 }
