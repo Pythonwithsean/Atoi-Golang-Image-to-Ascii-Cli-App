@@ -2,48 +2,36 @@ package ascii
 
 import (
 	"fmt"
-	"github.com/nfnt/resize"
 	"image"
 	"image/color"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/nfnt/resize"
 )
 
+//Create New Grey Image Frame with the bounds of the Old Image
+
 func convertToGreyScale(img image.Image) image.Image {
-	//Create New Grey Image Frame with the bounds of the Old Image
 	greyImg := image.NewGray(img.Bounds())
 	for y := greyImg.Bounds().Min.Y; y < greyImg.Bounds().Max.Y; y++ {
 		for x := greyImg.Bounds().Min.X; x < greyImg.Bounds().Max.X; x++ {
 			pixelAtLocation := img.At(x, y)
 			grayColor := color.GrayModel.Convert(pixelAtLocation)
 			greyImg.Set(x, y, grayColor)
-
 		}
 	}
 	return greyImg
 }
 
-// func calculateAverage(val *int, num int) {
-// 	*val += num
-// }
-
-// func getAllPixels() {
-
-// }
-
 func ImageToAscii(addr string) {
-
-	// asciiChars := map[string]string{
-
-	// }
 
 	// body,err := ioutil.ReadFile(addr)
 	file, err := os.Open(string(strings.TrimSpace(addr)))
 	if err != nil {
 		log.Fatal("Error Opening File", err)
 	}
-
 	// Close Reader When Function gets popped off Call stack
 	defer file.Close()
 
@@ -70,7 +58,6 @@ func ImageToAscii(addr string) {
 	resizedImg := resize.Resize(0, 100, greyScaledImage, resize.Lanczos2)
 	bounds := resizedImg.Bounds()
 	// allPixelsSum := 0
-	//
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			//This Returns the Color Codes for 16bit Color Channels from 0 - 2^16

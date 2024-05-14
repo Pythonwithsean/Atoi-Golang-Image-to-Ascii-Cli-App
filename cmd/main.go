@@ -10,6 +10,9 @@ import (
 )
 
 func main() {
+	// Introduction to Ascii
+
+	//Importing Util funcitons for loading Ascii logo and Welcome Text
 	fmt.Printf(utils.Red + utils.IntialAscii)
 	fmt.Println(utils.Yellow + "Welcome to Atoi")
 	fmt.Println("A Image to Ascii Cli Application")
