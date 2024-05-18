@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"log"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/nfnt/resize"
@@ -25,6 +26,7 @@ func convertToGreyScale(img image.Image) image.Image {
 	return greyImg
 }
 
+// Function to Convert Image to Ascii
 func ImageToAscii(addr string) {
 
 	// body,err := ioutil.ReadFile(addr)
@@ -42,41 +44,56 @@ func ImageToAscii(addr string) {
 	//Luminance (perceived option 1): (0.299*R + 0.587*G + 0.114*B)
 
 	//Ascii symbols
-	brightAscii := []string{"@", "+", "="}
+	brightAscii := []string{"8", "2", "0"}
 
-	darkAscii := []string{" ", ".", "-"}
+	darkAscii := []string{" ", ".", " /"}
 
 	/* Decoded image so that i can work with the image data like pixels for each pixel   */
 	imgData, _, err := image.Decode(file)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	greyScaledImage := convertToGreyScale(imgData)
 
 	// Resizen Image to smaller res for Terminal
 	resizedImg := resize.Resize(0, 100, greyScaledImage, resize.Lanczos2)
 	bounds := resizedImg.Bounds()
-	// allPixelsSum := 0
+
+	// Get all the brightness Values
+	var brightnessVals []float64
+
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
-			//This Returns the Color Codes for 16bit Color Channels from 0 - 2^16
+			r, g, b, _ := resizedImg.At(x, y).RGBA()
+			brightnessValues := (0.299*float64(r) + 0.587*float64(g) + 0.114*float64(b))
+			// Appending the brightness Values in to the Array
+			brightnessVals = append(brightnessVals, brightnessValues)
+
+		}
+	}
+
+	// Sort brightness values to determine thresholds
+	sort.Float64s(brightnessVals)
+	brightThreshold := brightnessVals[int(float64(len(brightnessVals))*0.8)]
+	darkThreshold := brightnessVals[int(float64(len(brightnessVals))*0.2)]
+
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			r, g, b, _ := resizedImg.At(x, y).RGBA()
 			brigthness := (0.299*float64(r) + 0.587*float64(g) + 0.114*float64(b))
-			bright := brigthness >= 1200
-			brightest := brigthness >= 20000
-			dark := brigthness <= 5000
-			darked := brigthness <= 1000
+			bright := brigthness >= brightThreshold/3
+			brightest := brigthness >= brightThreshold
+			dark := brigthness <= darkThreshold/2
+			darked := brigthness <= darkThreshold
 			if bright {
-				fmt.Print(brightAscii[0], " ")
+				fmt.Print(brightAscii[x%len(brightAscii)], " ")
 			} else if brightest {
-				fmt.Print(brightAscii[2] + " ")
+				fmt.Print(brightAscii[y%len(brightAscii)] + " ")
 			} else if darked {
-				fmt.Print(darkAscii[1] + " ")
+				fmt.Print(darkAscii[x%len(darkAscii)] + " ")
 			} else if dark {
-				fmt.Print(darkAscii[0] + " ")
+				fmt.Print(darkAscii[y%len(darkAscii)] + " ")
 			}
-			// calculateAverage(&allPixelsSum, int(brigthness)
 		}
 		fmt.Println()
 	}
