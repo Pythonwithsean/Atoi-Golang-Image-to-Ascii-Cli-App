@@ -28,6 +28,7 @@ Once the dependencies are installed, you can run Atoi using the following comman
 
 ```bash
 make run
+```
 
 
 ## Features
