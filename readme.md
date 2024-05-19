@@ -1,13 +1,12 @@
-Atoi-Golang-Image-to-Ascii-Cli-App
-
+# Atoi-Golang-Image-to-Ascii-Cli-App
 
 ## Getting Started
 
-To use Loooffyy locally on your machine, follow these steps:
+To use Atoi locally on your machine, follow these steps:
 
 ### Prerequisites
 
-- Go SDK installed on your machine 
+- Go SDK installed on your machine
 
 ### Installation
 
@@ -23,29 +22,20 @@ To use Loooffyy locally on your machine, follow these steps:
     cd Atoi-Golang-Image-to-Ascii-Cli-App
     ```
 
-
 ### Running the Application
 
-Once the dependencies are installed, you can run ATOI using the following command:
+Once the dependencies are installed, you can run Atoi using the following command:
 
 ```bash
 make run
-```
 
-This command starts the development server. Open your web browser and navigate to http://localhost:3000 to access Loooffyy.
 
 ## Features
 
-- Anime Streaming: Stream your favorite anime series and movies.
-- User-Friendly Interface: Enjoy a smooth and intuitive user experience.
-- Vast Collection: Explore a vast collection of anime content.
-- Technologies Used
--Vite
--TypeScript
--React
--Other libraries and tools (listed in package.json)
--Contributing
--Contributions are welcome! If you'd like to contribute to Loooffyy, please follow the Contributing Guidelines.
+Image to ASCII Conversion: Convert your images to ASCII art effortlessly.
+User-Friendly CLI: Enjoy a simple and intuitive command-line interface.
+Aspect Ratio Maintenance: Ensures the ASCII art retains the original image's aspect ratio.
+
 
 ## License
 This project is licensed under the MIT License.
