@@ -7,8 +7,7 @@ To use Loooffyy locally on your machine, follow these steps:
 
 ### Prerequisites
 
-- Node.js installed on your machine ([Download Node.js](https://nodejs.org/))
-- npm package manager (comes with Node.js installation)
+- Go SDK installed on your machine 
 
 ### Installation
 
@@ -21,21 +20,16 @@ To use Loooffyy locally on your machine, follow these steps:
 2. Navigate to the project directory:
 
     ```bash
-    cd loooffyy
+    cd Atoi-Golang-Image-to-Ascii-Cli-App
     ```
 
-3. Install dependencies using npm:
-
-    ```bash
-    npm install
-    ```
 
 ### Running the Application
 
-Once the dependencies are installed, you can run Loooffyy using the following command:
+Once the dependencies are installed, you can run ATOI using the following command:
 
 ```bash
-npm run dev
+make run
 ```
 
 This command starts the development server. Open your web browser and navigate to http://localhost:3000 to access Loooffyy.
