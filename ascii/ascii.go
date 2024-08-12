@@ -14,8 +14,6 @@ import (
 	"github.com/nfnt/resize"
 )
 
-//Create New Grey Image Frame with the bounds of the Old Image
-
 func convertToGreyScale(img image.Image) image.Image {
 	greyImg := image.NewGray(img.Bounds())
 	for y := greyImg.Bounds().Min.Y; y < greyImg.Bounds().Max.Y; y++ {
@@ -28,7 +26,6 @@ func convertToGreyScale(img image.Image) image.Image {
 	return greyImg
 }
 
-// Function to Convert Image to Ascii
 func ImageToAscii(addr string) {
 
 	// body,err := ioutil.ReadFile(addr)
@@ -36,7 +33,6 @@ func ImageToAscii(addr string) {
 	if err != nil {
 		log.Fatal("Error Opening File: ", err)
 	}
-	// Close Reader When Function gets popped off Call stack
 	defer file.Close()
 
 	/* To Calculate the Brightmess from Rgb values it can be done bt converting the rgb values of each pixel into a Greyscale value
@@ -46,35 +42,28 @@ func ImageToAscii(addr string) {
 	//Luminance (perceived option 1): (0.299*R + 0.587*G + 0.114*B)
 
 	//Ascii symbols
-	brightAscii := []string{"@", "8", "0"}
+	brightAscii := []string{"@", "#", "8", "&", "o"}
+	darkAscii := []string{" ", ".", "*", "~", "-"}
 
-	darkAscii := []string{" ", ".", " /"}
-
-	/* Decoded image so that i can work with the image data like pixels for each pixel   */
 	imgData, _, err := image.Decode(file)
 	if err != nil {
 		log.Fatal("Error Decoding File:  ", err)
 	}
 	greyScaledImage := convertToGreyScale(imgData)
 
-	// Resizen Image to smaller res for Terminal
 	resizedImg := resize.Resize(0, 100, greyScaledImage, resize.Lanczos2)
 	bounds := resizedImg.Bounds()
 
-	// Get all the brightness Values
 	var brightnessVals []float64
 
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			r, g, b, _ := resizedImg.At(x, y).RGBA()
 			brightnessValues := (0.299*float64(r) + 0.587*float64(g) + 0.114*float64(b))
-			// Appending the brightness Values in to the Array
 			brightnessVals = append(brightnessVals, brightnessValues)
 
 		}
 	}
-
-	// Sort brightness values to determine thresholds
 	sort.Float64s(brightnessVals)
 	brightThreshold := brightnessVals[int(float64(len(brightnessVals))*0.8)]
 	darkThreshold := brightnessVals[int(float64(len(brightnessVals))*0.2)]
