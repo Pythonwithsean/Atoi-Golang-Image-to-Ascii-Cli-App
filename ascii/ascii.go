@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	_ "image/jpeg"
+	_ "image/png"
 	"log"
 	"os"
 	"sort"
@@ -32,7 +34,7 @@ func ImageToAscii(addr string) {
 	// body,err := ioutil.ReadFile(addr)
 	file, err := os.Open(string(strings.TrimSpace(addr)))
 	if err != nil {
-		log.Fatal("Error Opening File", err)
+		log.Fatal("Error Opening File: ", err)
 	}
 	// Close Reader When Function gets popped off Call stack
 	defer file.Close()
@@ -44,14 +46,14 @@ func ImageToAscii(addr string) {
 	//Luminance (perceived option 1): (0.299*R + 0.587*G + 0.114*B)
 
 	//Ascii symbols
-	brightAscii := []string{"8", "2", "0"}
+	brightAscii := []string{"@", "8", "0"}
 
 	darkAscii := []string{" ", ".", " /"}
 
 	/* Decoded image so that i can work with the image data like pixels for each pixel   */
 	imgData, _, err := image.Decode(file)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error Decoding File:  ", err)
 	}
 	greyScaledImage := convertToGreyScale(imgData)
 
