@@ -108,10 +108,19 @@ button:hover {
   border-radius: 5px;
 }
 
+.ascii-preview {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
 .ascii-output {
   background: var(--secondary-color);
   padding: 20px;
+  border: 2px dotted var(--primary-color);
   color: var(--primary-color);
+  margin: auto;
   border-radius: 5px;
   font-family: monospace;
   white-space: pre-wrap;

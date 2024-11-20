@@ -29,7 +29,6 @@ function App() {
     });
     const data = await response.json();
     const { art } = data;
-    console.log(art);
     setAscii(art);
   }
 
@@ -44,13 +43,17 @@ function App() {
       <main>
         <section id="upload">
           <h2>Image to ASCII Generator</h2>
-          <div className="input-container">
+          <div className="content-container">
             <div className="image-preview">
-              {image && <img src={image} alt="Uploaded" />}
+              {image && (
+                <img src={image} alt="Uploaded" className="image-original" />
+              )}
+              <input type="file" accept="image/*" onChange={handleFileUpload} />
+              <button onClick={sendImage}>Generate ASCII</button>
             </div>
-            <input type="file" accept="image/*" onChange={handleFileUpload} />
-            <button onClick={sendImage}>Generate ASCII</button>
-            <pre className="ascii-output">{ascii}</pre>
+            <div className="ascii-preview">
+              <pre className="ascii-output">{ascii}</pre>
+            </div>
           </div>
         </section>
       </main>
