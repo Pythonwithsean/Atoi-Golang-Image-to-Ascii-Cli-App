@@ -116,6 +116,7 @@ button:hover {
   font-family: monospace;
   white-space: pre-wrap;
   min-height: max-content;
+  min-width: max-content;
   max-width: max-content;
   word-wrap: break-word;
 }
