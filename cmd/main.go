@@ -1,23 +1,31 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-
-	"github.com/Pythonwithsean/Atoi-Golang-Image-to-Ascii-Cli-App/ascii"
 	"github.com/Pythonwithsean/Atoi-Golang-Image-to-Ascii-Cli-App/utils"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+)
+
+const (
+	Dir = "uploads"
 )
 
 func main() {
-	fmt.Printf(utils.Red + utils.IntialAscii)
-	fmt.Println(utils.Yellow + "Welcome to Atoi")
-	fmt.Println("A Image to Ascii Cli Application")
-	fmt.Print("Search for an Image? ")
-	buff := bufio.NewReader(os.Stdin)
-	input, err := buff.ReadString('\n')
-	if err != nil {
-		panic(err)
-	}
-	ascii.ImageToAscii(input)
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{"http://localhost:5173"}                   // Adjust this to your frontend URL
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}            // Allowed HTTP methods
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"} // Allowed headers
+
+	r := gin.Default()
+
+	// Apply CORS middleware to the router
+	r.Use(cors.New(corsConfig))
+
+	r.SetTrustedProxies([]string{"127.0.0.1", "::1"})
+
+	r.POST("/convert", func(c *gin.Context) {
+		utils.UploadFile(c)
+	})
+
+	r.Run()
 }

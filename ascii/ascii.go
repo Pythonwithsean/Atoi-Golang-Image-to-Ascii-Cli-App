@@ -28,7 +28,6 @@ func convertToGreyScale(img image.Image) image.Image {
 
 func ImageToAscii(addr string) {
 
-	// body,err := ioutil.ReadFile(addr)
 	file, err := os.Open(string(strings.TrimSpace(addr)))
 	if err != nil {
 		log.Fatal("Error Opening File: ", err)
@@ -39,9 +38,7 @@ func ImageToAscii(addr string) {
 	I have Chosen to use the Luminance formula grayscale = 0.2126 * Red + 0.7152 * Green + 0.00722 * Blue this formula will take into account
 	the humans eyes sensitivity to different colors and provies a better representation of brighness
 	*/
-	//Luminance (perceived option 1): (0.299*R + 0.587*G + 0.114*B)
 
-	//Ascii symbols
 	brightAscii := []string{"@", "#", "8", "&", "o"}
 	darkAscii := []string{" ", ".", "*", "~", "-"}
 
