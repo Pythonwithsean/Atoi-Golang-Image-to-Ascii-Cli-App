@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/Pythonwithsean/Atoi-Golang-Image-to-Ascii-Cli-App/ascii"
 	"github.com/gin-gonic/gin"
 )
 
@@ -50,5 +51,9 @@ func UploadFile(c *gin.Context) {
 		})
 		return
 	}
+	imageAscii := ascii.ImageToAscii(filePath)
+	c.JSON(200, gin.H{
+		"art": imageAscii,
+	})
 
 }

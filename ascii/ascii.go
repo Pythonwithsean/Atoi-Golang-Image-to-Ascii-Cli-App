@@ -3,30 +3,17 @@ package ascii
 import (
 	"fmt"
 	"image"
-	"image/color"
 	_ "image/jpeg"
 	_ "image/png"
 	"log"
+	"math/rand"
 	"os"
-	"sort"
 	"strings"
 
 	"github.com/nfnt/resize"
 )
 
-func convertToGreyScale(img image.Image) image.Image {
-	greyImg := image.NewGray(img.Bounds())
-	for y := greyImg.Bounds().Min.Y; y < greyImg.Bounds().Max.Y; y++ {
-		for x := greyImg.Bounds().Min.X; x < greyImg.Bounds().Max.X; x++ {
-			pixelAtLocation := img.At(x, y)
-			grayColor := color.GrayModel.Convert(pixelAtLocation)
-			greyImg.Set(x, y, grayColor)
-		}
-	}
-	return greyImg
-}
-
-func ImageToAscii(addr string) {
+func ImageToAscii(addr string) string {
 
 	file, err := os.Open(string(strings.TrimSpace(addr)))
 	if err != nil {
@@ -34,56 +21,46 @@ func ImageToAscii(addr string) {
 	}
 	defer file.Close()
 
-	/* To Calculate the Brightmess from Rgb values it can be done bt converting the rgb values of each pixel into a Greyscale value
-	I have Chosen to use the Luminance formula grayscale = 0.2126 * Red + 0.7152 * Green + 0.00722 * Blue this formula will take into account
-	the humans eyes sensitivity to different colors and provies a better representation of brighness
-	*/
+	darkAscii := []string{"@", "#", "*", "&", "£", "$", "€", "¥", "o", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "l", "m", "n", "p", "q", "r", "s", "t", "u", "v", "x", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
+	brightAscii := []string{".", ".", "|", ":", "-", " "}
 
-	brightAscii := []string{"@", "#", "8", "&", "o"}
-	darkAscii := []string{" ", ".", "*", "~", "-"}
-
-	imgData, _, err := image.Decode(file)
+	img, _, err := image.Decode(file)
 	if err != nil {
 		log.Fatal("Error Decoding File:  ", err)
 	}
-	greyScaledImage := convertToGreyScale(imgData)
 
-	resizedImg := resize.Resize(0, 100, greyScaledImage, resize.Lanczos2)
-	bounds := resizedImg.Bounds()
+	resizedImg := resize.Resize(150, 0, img, resize.Lanczos3)
+	fmt.Println(resizedImg.Bounds().Max.X, resizedImg.Bounds().Max.Y)
+	matrix := make([][]any, resizedImg.Bounds().Max.Y)
 
-	var brightnessVals []float64
+	result := ""
 
-	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-		for x := bounds.Min.X; x < bounds.Max.X; x++ {
-			r, g, b, _ := resizedImg.At(x, y).RGBA()
-			brightnessValues := (0.299*float64(r) + 0.587*float64(g) + 0.114*float64(b))
-			brightnessVals = append(brightnessVals, brightnessValues)
-
-		}
-	}
-	sort.Float64s(brightnessVals)
-	brightThreshold := brightnessVals[int(float64(len(brightnessVals))*0.8)]
-	darkThreshold := brightnessVals[int(float64(len(brightnessVals))*0.2)]
-
-	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-		for x := bounds.Min.X; x < bounds.Max.X; x++ {
-			r, g, b, _ := resizedImg.At(x, y).RGBA()
-			brigthness := (0.299*float64(r) + 0.587*float64(g) + 0.114*float64(b))
-			bright := brigthness >= brightThreshold/3
-			brightest := brigthness >= brightThreshold
-			dark := brigthness <= darkThreshold/2
-			darked := brigthness <= darkThreshold
-			if bright {
-				fmt.Print(brightAscii[x%len(brightAscii)], " ")
-			} else if brightest {
-				fmt.Print(brightAscii[y%len(brightAscii)] + " ")
-			} else if darked {
-				fmt.Print(darkAscii[x%len(darkAscii)] + " ")
-			} else if dark {
-				fmt.Print(darkAscii[y%len(darkAscii)] + " ")
+	for i := resizedImg.Bounds().Min.Y; i < resizedImg.Bounds().Max.Y; i++ {
+		matrix[i] = make([]any, resizedImg.Bounds().Max.X)
+		for j := resizedImg.Bounds().Min.X; j < resizedImg.Bounds().Max.X; j++ {
+			r, g, b, a := resizedImg.At(j, i).RGBA()
+			// Shifting 16 bits to the right to get the 8 bit value
+			// 65535 -> 255
+			// RGBA uses 16 bits to represent the color value
+			// RIGHT SHIFTING removes the 8 bits of padding
+			r = r >> 8
+			g = g >> 8
+			b = b >> 8
+			a = a >> 8
+			// Brightness Formula -> 0.299×R+0.587×G+0.114×B
+			brightness := 0.299*float64(r) + 0.587*float64(g) + 0.114*float64(b)
+			if a < 255 {
+				brightness *= float64(a) / 255.0
+			}
+			if brightness < 128 {
+				result += string(darkAscii[rand.Intn(len(darkAscii))])
+			} else {
+				result += string(brightAscii[rand.Intn(len(brightAscii))])
 			}
 		}
-		fmt.Println()
+		result += "\n"
 	}
 
+	fmt.Println(result)
+	return result
 }
