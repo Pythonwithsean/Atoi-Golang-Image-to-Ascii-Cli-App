@@ -46,15 +46,11 @@ For any inquiries or support, feel free to contact us at Pythonwithsean@gmail.co
 
 Thank you for choosing Atoi! 🎉
 
-[Screencast from 2024-05-18 19-10-55.webm](https://github.com/Pythonwithsean/Atoi-Golang-Image-to-Ascii-Cli-App/assets/107402787/3707d5e8-aed6-45bf-8632-30d6f88ab3e2)
+
 
 https://github.com/user-attachments/assets/ce243e92-d763-4013-9658-15851ee2ef6b
 
-=====
 
-![New Terminal](https://github.com/Pythonwithsean/Atoi-Golang-Image-to-Ascii-Cli-App/assets/107402787/0122dbcd-6a4a-40c4-a56f-b8c9f5c972c9)
-=======
-![New Terminal](https://github.com/Pythonwithsean/Atoi-Golang-Image-to-Ascii-Cli-App/assets/107402787/0122dbcd-6a4a-40c4-a56f-b8c9f5c972c9)
 
 
 
